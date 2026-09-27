@@ -213,7 +213,11 @@ function startVoice() {
   }
 
 }
-
+window.addEventListener("load", function() {
+  setTimeout(function() {
+    startVoice();
+  }, 300);
+});
 </script>
 
 </body>
