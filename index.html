@@ -70,9 +70,7 @@
 
   <h1>🤖 JARVIS</h1>
 
-  <div>
-    Voice Bridge
-  </div>
+  <div>Voice Bridge</div>
 
   <button id="talkButton">
     🎙️ TALK TO JARVIS
@@ -106,12 +104,9 @@ function startVoice() {
     window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
-
     status.innerText =
       "Speech recognition is not supported by this browser.";
-
     return;
-
   }
 
   if (listening) {
@@ -121,38 +116,24 @@ function startVoice() {
   recognition = new SpeechRecognition();
 
   recognition.lang = "en-IN";
-
   recognition.interimResults = false;
-
   recognition.continuous = false;
-
   recognition.maxAlternatives = 1;
 
   listening = true;
 
   button.classList.add("listening");
-
-  button.innerText =
-    "🔴 LISTENING...";
-
-  status.innerText =
-    "I'm listening...";
+  button.innerText = "🔴 LISTENING...";
+  status.innerText = "I'm listening...";
 
   recognition.onresult = function(event) {
 
     const transcript =
       event.results[0][0].transcript.trim();
 
-    heard.innerText =
-      transcript;
+    heard.innerText = transcript;
+    status.innerText = "Command captured.";
 
-    status.innerText =
-      "Command captured.";
-
-    /*
-     * Send the recognized text back
-     * to the JARVIS window.
-     */
     if (window.opener) {
 
       window.opener.postMessage(
@@ -160,7 +141,7 @@ function startVoice() {
           type: "JARVIS_VOICE_COMMAND",
           text: transcript
         },
-        "*"
+        "https://script.google.com"
       );
 
     } else {
@@ -169,7 +150,6 @@ function startVoice() {
         "JARVIS window was not found.";
 
     }
-
   };
 
   recognition.onerror = function(event) {
@@ -177,18 +157,12 @@ function startVoice() {
     status.innerText =
       "Voice error: " + event.error;
 
+    resetVoiceButton();
   };
 
   recognition.onend = function() {
 
-    listening = false;
-
-    button.classList.remove(
-      "listening"
-    );
-
-    button.innerText =
-      "🎙️ TALK TO JARVIS";
+    resetVoiceButton();
 
   };
 
@@ -198,29 +172,36 @@ function startVoice() {
 
   } catch (error) {
 
-    listening = false;
-
-    button.classList.remove(
-      "listening"
-    );
-
-    button.innerText =
-      "🎙️ TALK TO JARVIS";
-
     status.innerText =
       "Could not start voice recognition.";
 
-  }
+    resetVoiceButton();
 
+  }
 }
+
+function resetVoiceButton() {
+
+  listening = false;
+
+  button.classList.remove("listening");
+
+  button.innerText =
+    "🎙️ TALK TO JARVIS";
+}
+
 window.addEventListener("load", function() {
+
   setTimeout(function() {
+
     startVoice();
+
   }, 300);
+
 });
+
 </script>
 
 </body>
 </html>
 
-Add JARVIS voice bridge
